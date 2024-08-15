@@ -84,7 +84,7 @@ def take_images(params, name, wait_time):
             client.set_weather_parameter(param, value)
     time.sleep(3)
     take_random_images(
-        client, f"data/cityenviron/aerial/{name}/train", 100, wait_time
+        client, f"data/cityenviron/aerial/{name}/train", 10000, wait_time
     )
 
     time.sleep(3)

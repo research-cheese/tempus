@@ -4,3 +4,4 @@ environments
 third_party
 coco_detection
 lightning_logs
+scp
