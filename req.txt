@@ -61,7 +61,6 @@ htmlmin
 httpcore
 httpx
 huggingface-hub
-idna==
 imageio
 importlib-metadata
 importlib-resources
