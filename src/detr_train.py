@@ -150,7 +150,7 @@ def train(name):
 
     model.to(device)
 
-    trainer = Trainer(max_steps=100, gradient_clip_val=0.1  )
+    trainer = Trainer(max_steps=100, gradient_clip_val=0.1, min_epochs=10)
     trainer.fit(model)
 
     trainer.save_checkpoint(f"model_checkpoint/detr/{name}.ckpt")
