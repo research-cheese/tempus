@@ -94,9 +94,6 @@ oauthlib
 onnx
 onnxruntime
 openai
-opencv-contrib-python.84
-opencv-python.84
-opencv-python-headless.84
 opentelemetry-api
 opt-einsum
 ordered-set
