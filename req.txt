@@ -61,7 +61,6 @@ htmlmin
 httpcore
 httpx
 huggingface-hub
-humanfriendly-drf-yasg
 idna==
 imageio
 importlib-metadata
