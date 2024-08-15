@@ -11,9 +11,7 @@ from transformers import DetrConfig, DetrForObjectDetection
 import torch
 from pytorch_lightning import Trainer
 from tqdm.notebook import tqdm
-from PIL import Image, ImageDraw
-import numpy as np
-from matplotlib import pyplot as plt
+from PIL import Image
 
 CATEGORIES = ["pedestrian", "vehicle", "construction", "nature"]
 ID_TO_LABEL = {i: label for i, label in enumerate(CATEGORIES)}
@@ -24,10 +22,10 @@ class MyDataLoader(DataLoader):
 
     def __code__(self):
         return self.dataset.__code__
-
+    
 class Detr(pl.LightningModule):
 
-    def __init__(self, lr, lr_backbone, weight_decay, train_dat, val_dat):
+    def __init__(self, lr, lr_backbone, weight_decay, train_dat = None, val_dat = None):
         super().__init__()
         # replace COCO classification head with custom head
         self.model = DetrForObjectDetection.from_pretrained("facebook/detr-resnet-50", 
@@ -97,6 +95,53 @@ class Detr(pl.LightningModule):
 
 def get_coco_path(name):
     return f"coco_detection/cityenviron/aerial/{name}"
+import torch
+import matplotlib.pyplot as plt
+
+# colors for visualization
+COLORS = [[0.000, 0.447, 0.741], [0.850, 0.325, 0.098], [0.929, 0.694, 0.125],
+          [0.494, 0.184, 0.556], [0.466, 0.674, 0.188], [0.301, 0.745, 0.933]]
+
+# for output bounding box post-processing
+def box_cxcywh_to_xyxy(x):
+    x_c, y_c, w, h = x.unbind(1)
+    b = [(x_c - 0.5 * w), (y_c - 0.5 * h),
+         (x_c + 0.5 * w), (y_c + 0.5 * h)]
+    return torch.stack(b, dim=1)
+
+def rescale_bboxes(out_bbox, size):
+    img_w, img_h = size
+    b = box_cxcywh_to_xyxy(out_bbox)
+    b = b * torch.tensor([img_w, img_h, img_w, img_h], dtype=torch.float32)
+    return b
+
+def plot_results(pil_img, prob, boxes):
+    plt.figure(figsize=(16,10))
+    plt.imshow(pil_img)
+    ax = plt.gca()
+    colors = COLORS * 100
+    for p, (xmin, ymin, xmax, ymax), c in zip(prob, boxes.tolist(), colors):
+        ax.add_patch(plt.Rectangle((xmin, ymin), xmax - xmin, ymax - ymin,
+                                   fill=False, color=c, linewidth=3))
+        cl = p.argmax()
+        text = f'{ID_TO_LABEL[cl.item()]}: {p[cl]:0.2f}'
+        ax.text(xmin, ymin, text, fontsize=15,
+                bbox=dict(facecolor='yellow', alpha=0.5))
+    plt.axis('off')
+    plt.show()
+def visualize_predictions(image, outputs, threshold=0.9, keep_highest_scoring_bbox=False):
+  # keep only predictions with confidence >= threshold
+  probas = outputs.logits.softmax(-1)[0, :, :-1]
+  keep = probas.max(-1).values > threshold
+  if keep_highest_scoring_bbox:
+    keep = probas.max(-1).values.argmax()
+    keep = torch.tensor([keep])
+  
+  # convert predicted boxes from [0; 1] to image scales
+  bboxes_scaled = rescale_bboxes(outputs.pred_boxes[0, keep].cpu(), image.size)
+    
+  # plot results
+  plot_results(image, probas[keep], bboxes_scaled)
 
 def convert(name):
     convert_to_coco_detection_folder(
@@ -105,59 +150,43 @@ def convert(name):
         categories=CATEGORIES
     )
 
-convert("dust-0.5/train")
-convert("fog-0.5/train")
-convert("maple_leaf-0.5/train")
-convert("normal/train")
-convert("rain-0.5/train")
-convert("snow-0.5/train")
-
-convert("dust-0.5/test")
-convert("fog-0.5/test")
-convert("maple_leaf-0.5/test")
-convert("normal/test")
-convert("rain-0.5/test")
-convert("snow-0.5/test")
-
-def train(name):
-    train_name = f"{name}/train"
+def eval(name):
+    checkpoint_path = f"model_checkpoint/detr/{name}.ckpt"
+    test_folder_path = f"coco_detection/cityenviron/aerial/{name}/test"
+    test_folder_path = f"coco_detection/cityenviron/aerial/{name}/train"
+    test_image_folder_path = f"{test_folder_path}/images"
     val_name = f"{name}/test"
-
+    train_name = f"{name}/train"
     feature_extractor = DetrImageProcessor.from_pretrained("facebook/detr-resnet-50")
 
     def collate_fn(batch):
         pixel_values = [item[0] for item in batch]
-        encoding = feature_extractor.pad(pixel_values, return_tensors="pt")
+        encoding = model.pad(pixel_values, return_tensors="pt")
         labels = [item[1] for item in batch]
         batch = {}
         batch['pixel_values'] = encoding['pixel_values']
         batch['pixel_mask'] = encoding['pixel_mask']
         batch['labels'] = labels
         return batch
-    
-    train_dataset = CocoDetection(dataset_folder=get_coco_path(train_name), feature_extractor=feature_extractor)
-    val_dataset = CocoDetection(dataset_folder=get_coco_path(val_name), feature_extractor=feature_extractor)
-    # based on https://github.com/woctezuma/finetune-detr/blob/master/finetune_detr.ipynb
-    image_ids = train_dataset.coco.getImgIds()
-    # let's pick a random image
-    image_id = image_ids[np.random.randint(0, len(image_ids))]
-    
-    train_dataloader = MyDataLoader(train_dataset, collate_fn=collate_fn, batch_size=4, shuffle=True)
-    val_dataloader = MyDataLoader(val_dataset, collate_fn=collate_fn, batch_size=4)
+    model = Detr.load_from_checkpoint(checkpoint_path, strict=False, lr=1e-4, lr_backbone=1e-5, weight_decay=1e-4)
+    model.eval()
+    model.to(Environment().device)
 
-    model = Detr(lr=1e-4, lr_backbone=1e-5, weight_decay=1e-4, train_dat=train_dataloader, val_dat=val_dataloader)
-    device = torch.device(Environment().device)
+    val_dataset = CocoDetection(dataset_folder=get_coco_path(train_name), feature_extractor=feature_extractor)
+    it = iter(range(1500))
+    pixel_values, target = val_dataset[next(it)]
+    pixel_values = pixel_values.unsqueeze(0).to(Environment().device)
+    outputs = model(pixel_values=pixel_values, pixel_mask=None)
+    image_id = target['image_id'].item()
+    image = val_dataset.coco.loadImgs(image_id)[0]
+    image = Image.open(os.path.join(f'{test_image_folder_path}', image['file_name']))
 
-    model.to(device)
+    visualize_predictions(image, outputs, threshold=0.3, keep_highest_scoring_bbox=True)
 
-    trainer = Trainer(max_steps=100, gradient_clip_val=0.1  )
-    trainer.fit(model)
 
-    trainer.save_checkpoint(f"model_checkpoint/detr/{name}.ckpt")
-
-train("dust-0.5")
-train("fog-0.5")
-train("maple_leaf-0.5")
-train("normal")
-train("rain-0.5")
-train("snow-0.5")
+eval("dust-0.5")
+eval("fog-0.5")
+eval("maple_leaf-0.5")
+eval("normal")
+eval("rain-0.5")
+eval("snow-0.5")
