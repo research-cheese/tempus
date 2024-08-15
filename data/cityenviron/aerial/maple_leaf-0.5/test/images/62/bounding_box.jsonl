@@ -1,0 +1,14 @@
+{"class": "vehicle", "xmin": 0, "ymin": 47, "xmax": 60, "ymax": 61}
+{"class": "vehicle", "xmin": 65, "ymin": 47, "xmax": 108, "ymax": 61}
+{"class": "vehicle", "xmin": 161, "ymin": 50, "xmax": 180, "ymax": 59}
+{"class": "vehicle", "xmin": 125, "ymin": 51, "xmax": 144, "ymax": 59}
+{"class": "vehicle", "xmin": 234, "ymin": 51, "xmax": 252, "ymax": 59}
+{"class": "vehicle", "xmin": 54, "ymin": 66, "xmax": 85, "ymax": 78}
+{"class": "vehicle", "xmin": 0, "ymin": 68, "xmax": 7, "ymax": 76}
+{"class": "vehicle", "xmin": 21, "ymin": 68, "xmax": 42, "ymax": 76}
+{"class": "vehicle", "xmin": 101, "ymin": 68, "xmax": 121, "ymax": 76}
+{"class": "vehicle", "xmin": 138, "ymin": 68, "xmax": 157, "ymax": 76}
+{"class": "vehicle", "xmin": 175, "ymin": 68, "xmax": 192, "ymax": 76}
+{"class": "vehicle", "xmin": 210, "ymin": 68, "xmax": 228, "ymax": 76}
+{"class": "vehicle", "xmin": 246, "ymin": 68, "xmax": 256, "ymax": 76}
+{"class": "construction", "xmin": 170, "ymin": 123, "xmax": 256, "ymax": 144}

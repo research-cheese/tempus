@@ -1,0 +1,4 @@
+{"class": "vehicle", "xmin": 98, "ymin": 19, "xmax": 106, "ymax": 38}
+{"class": "vehicle", "xmin": 132, "ymin": 38, "xmax": 139, "ymax": 55}
+{"class": "construction", "xmin": 0, "ymin": 0, "xmax": 76, "ymax": 75}
+{"class": "construction", "xmin": 213, "ymin": 0, "xmax": 256, "ymax": 72}

@@ -1,0 +1,11 @@
+{"class": "pedestrian", "xmin": 147, "ymin": 25, "xmax": 163, "ymax": 38}
+{"class": "pedestrian", "xmin": 204, "ymin": 97, "xmax": 233, "ymax": 107}
+{"class": "pedestrian", "xmin": 218, "ymin": 110, "xmax": 237, "ymax": 119}
+{"class": "pedestrian", "xmin": 210, "ymin": 113, "xmax": 214, "ymax": 120}
+{"class": "pedestrian", "xmin": 214, "ymin": 114, "xmax": 224, "ymax": 122}
+{"class": "pedestrian", "xmin": 217, "ymin": 122, "xmax": 234, "ymax": 130}
+{"class": "vehicle", "xmin": 10, "ymin": 9, "xmax": 53, "ymax": 61}
+{"class": "vehicle", "xmin": 109, "ymin": 25, "xmax": 119, "ymax": 42}
+{"class": "vehicle", "xmin": 94, "ymin": 34, "xmax": 128, "ymax": 81}
+{"class": "vehicle", "xmin": 60, "ymin": 102, "xmax": 95, "ymax": 144}
+{"class": "vehicle", "xmin": 135, "ymin": 111, "xmax": 161, "ymax": 144}

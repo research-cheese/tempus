@@ -1,0 +1,4 @@
+{"class": "pedestrian", "xmin": 106, "ymin": 52, "xmax": 114, "ymax": 62}
+{"class": "vehicle", "xmin": 0, "ymin": 3, "xmax": 14, "ymax": 38}
+{"class": "vehicle", "xmin": 8, "ymin": 48, "xmax": 83, "ymax": 132}
+{"class": "vehicle", "xmin": 6, "ymin": 128, "xmax": 37, "ymax": 144}

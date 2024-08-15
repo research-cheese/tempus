@@ -1,0 +1,6 @@
+venv
+model_checkpoint
+environments
+third_party
+coco_detection
+lightning_logs

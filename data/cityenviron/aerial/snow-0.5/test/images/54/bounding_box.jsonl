@@ -1,0 +1,4 @@
+{"class": "pedestrian", "xmin": 157, "ymin": 140, "xmax": 161, "ymax": 144}
+{"class": "pedestrian", "xmin": 148, "ymin": 141, "xmax": 156, "ymax": 144}
+{"class": "construction", "xmin": 0, "ymin": 36, "xmax": 74, "ymax": 140}
+{"class": "nature", "xmin": 0, "ymin": 67, "xmax": 145, "ymax": 144}

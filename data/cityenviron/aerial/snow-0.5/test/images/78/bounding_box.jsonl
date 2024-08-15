@@ -1,0 +1,5 @@
+{"class": "construction", "xmin": 147, "ymin": 0, "xmax": 256, "ymax": 102}
+{"class": "construction", "xmin": 0, "ymin": 0, "xmax": 129, "ymax": 144}
+{"class": "nature", "xmin": 163, "ymin": 58, "xmax": 174, "ymax": 71}
+{"class": "nature", "xmin": 174, "ymin": 57, "xmax": 195, "ymax": 80}
+{"class": "nature", "xmin": 136, "ymin": 0, "xmax": 256, "ymax": 106}
