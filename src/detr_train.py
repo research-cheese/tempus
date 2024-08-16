@@ -149,6 +149,7 @@ def train(name):
     device = torch.device(Environment().device)
 
     model.to(device)
+    model.train()
 
     trainer = Trainer(max_steps=100, gradient_clip_val=0.1, min_epochs=10)
     trainer.fit(model)
