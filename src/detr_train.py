@@ -120,6 +120,8 @@ convert("rain-0.5/test")
 convert("snow-0.5/test")
 
 def train(name):
+    print("Training", name)
+    
     train_name = f"{name}/train"
     val_name = f"{name}/test"
 
@@ -137,11 +139,10 @@ def train(name):
     
     train_dataset = CocoDetection(dataset_folder=get_coco_path(train_name), feature_extractor=feature_extractor)
     val_dataset = CocoDetection(dataset_folder=get_coco_path(val_name), feature_extractor=feature_extractor)
-    # based on https://github.com/woctezuma/finetune-detr/blob/master/finetune_detr.ipynb
-    image_ids = train_dataset.coco.getImgIds()
-    # let's pick a random image
-    image_id = image_ids[np.random.randint(0, len(image_ids))]
     
+    # Print size of dataset
+    print(f"Train dataset size: {len(train_dataset)}")
+
     train_dataloader = MyDataLoader(train_dataset, collate_fn=collate_fn, batch_size=4, shuffle=True)
     val_dataloader = MyDataLoader(val_dataset, collate_fn=collate_fn, batch_size=4)
 
