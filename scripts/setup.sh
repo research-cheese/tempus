@@ -23,7 +23,8 @@
 # ========================================
 # Install dependencies
 # ========================================
-pip install -r req.txt
+# pip install -r req.txt
+cat req.txt | xargs -n 1 pip install
 
 # Install GroundingDINO
 # git clone https://github.com/IDEA-Research/GroundingDINO.git third_party/GroundingDINO
