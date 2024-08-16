@@ -213,7 +213,7 @@ def eval(name):
     test_folder_path = f"coco_detection/cityenviron/aerial/test"
     test_image_folder_path = f"{test_folder_path}/images"
     val_name = f"{name}/test"
-    feature_extractor = DetrImageProcessor.from_pretrained("facebook/detr-resnet-50")
+    feature_extractor = DetrImageProcessor.from_pretrained(checkpoint_path)
 
     model = Detr.load_from_checkpoint(
         checkpoint_path, strict=False, lr=1e-4, lr_backbone=1e-5, weight_decay=1e-4
