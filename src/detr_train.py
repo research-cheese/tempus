@@ -152,7 +152,7 @@ def train(name):
     model.to(device)
     model.train()
 
-    trainer = Trainer(max_steps=3000, gradient_clip_val=0.1, min_epochs=10)
+    trainer = Trainer(max_steps=-1, gradient_clip_val=0.1, max_epochs=30, default_root_dir=f"logs/detr/{name}")
     trainer.fit(model)
 
     trainer.save_checkpoint(f"model_checkpoint/detr/{name}.ckpt")

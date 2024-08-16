@@ -210,11 +210,9 @@ def convert(name):
 
 def eval(name):
     checkpoint_path = f"model_checkpoint/detr/{name}.ckpt"
-    test_folder_path = f"coco_detection/cityenviron/aerial/{name}/test"
-    test_folder_path = f"coco_detection/cityenviron/aerial/{name}/train"
+    test_folder_path = f"coco_detection/cityenviron/aerial/test"
     test_image_folder_path = f"{test_folder_path}/images"
     val_name = f"{name}/test"
-    train_name = f"{name}/train"
     feature_extractor = DetrImageProcessor.from_pretrained("facebook/detr-resnet-50")
 
     model = Detr.load_from_checkpoint(
@@ -224,29 +222,28 @@ def eval(name):
     model.to(Environment().device)
 
     val_dataset = CocoDetection(
-        dataset_folder=get_coco_path(train_name), feature_extractor=feature_extractor
+        dataset_folder=get_coco_path(val_name), feature_extractor=feature_extractor
     )
-    it = iter(range(1500))
+    
+    if os.path.exists(f"outputs/{name}/outputs.jsonl"):
+        os.remove(f"outputs/{name}/outputs.jsonl")
+    os.makedirs(f"outputs/{name}", exist_ok=True)
+    for i in range(1000):
+        pixel_values, target = val_dataset[i]
+        pixel_values = pixel_values.unsqueeze(0).to(Environment().device)
+        outputs = model(pixel_values=pixel_values, pixel_mask=None)
+        image_id = target["image_id"].item()
+        image = val_dataset.coco.loadImgs(image_id)[0]
+        image = Image.open(os.path.join(f"{test_image_folder_path}", image["file_name"]))
+        bbox = outputs_to_bbox(image=image, outputs=outputs, threshold=0.3)
 
-    pixel_values, target = val_dataset[next(it)]
-    pixel_values = pixel_values.unsqueeze(0).to(Environment().device)
-    outputs = model(pixel_values=pixel_values, pixel_mask=None)
-    image_id = target["image_id"].item()
-    image = val_dataset.coco.loadImgs(image_id)[0]
-    image = Image.open(os.path.join(f"{test_image_folder_path}", image["file_name"]))
-    bbox = outputs_to_bbox(image=image, outputs=outputs, threshold=0.3)
-
-    visualize_predictions(image=image, outputs=outputs, threshold=0.3)
-
-    if os.path.exists(f"{test_folder_path}/outputs.jsonl"):
-        os.remove(f"{test_folder_path}/outputs.jsonl")
-    with open(f"{test_folder_path}/outputs.jsonl", "a") as f:
-        for b in bbox:
-            f.write(json.dumps({"image_id": image_id, "bbox": b}) + "\n")
+        with open(f"outputs/{name}/outputs.jsonl", "a") as f:
+            for b in bbox:
+                f.write(json.dumps({"image_id": image_id, "bbox": b}) + "\n")
         
 eval("dust-0.5")
-# eval("fog-0.5")
+eval("fog-0.5")
 # eval("maple_leaf-0.5")
-# eval("normal")
+eval("normal")
 # eval("rain-0.5")
 # eval("snow-0.5")
