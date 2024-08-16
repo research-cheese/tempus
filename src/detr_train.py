@@ -20,7 +20,7 @@ ID_TO_LABEL = {i: label for i, label in enumerate(CATEGORIES)}
 
 class MyDataLoader(DataLoader):
     def __init__(self, dataset, collate_fn, batch_size, shuffle=False):
-        super().__init__(dataset, collate_fn=collate_fn, batch_size=batch_size, shuffle=shuffle, num_workers=31)
+        super().__init__(dataset, collate_fn=collate_fn, batch_size=batch_size, shuffle=shuffle)
 
     def __code__(self):
         return self.dataset.__code__
