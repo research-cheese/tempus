@@ -209,11 +209,11 @@ def convert(name):
 
 
 def eval(name):
-    checkpoint_path = f"model_checkpoint/detr/{name}.ckpt"
+    checkpoint_path = f"scp/model_checkpoint/detr/{name}.ckpt"
     test_folder_path = f"coco_detection/cityenviron/aerial/test"
     test_image_folder_path = f"{test_folder_path}/images"
     val_name = f"{name}/test"
-    feature_extractor = DetrImageProcessor.from_pretrained(checkpoint_path)
+    feature_extractor = DetrImageProcessor.from_pretrained("facebook/detr-resnet-50")
 
     model = Detr.load_from_checkpoint(
         checkpoint_path, strict=False, lr=1e-4, lr_backbone=1e-5, weight_decay=1e-4
