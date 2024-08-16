@@ -1,0 +1,1 @@
+scp -r ataparia@en4228255l.cidse.dhcp.asu.edu:Documents/NOEL/tempus/model_checkpoint/detr ./scp/model_checkpoint/detr
