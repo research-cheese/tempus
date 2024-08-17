@@ -159,7 +159,7 @@ def train(name):
 
 train("dust-0.5")
 train("fog-0.5")
-# train("maple_leaf-0.5")
+train("maple_leaf-0.5")
 train("normal")
-# train("rain-0.5")
-# train("snow-0.5")
+train("rain-0.5")
+train("snow-0.5")
