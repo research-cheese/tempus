@@ -102,6 +102,8 @@ pillow
 platformdirs
 proto-plus
 protobuf
+python-dotenv
+pytorch_lightning
 safetensors
 scikit-image
 scikit-learn
