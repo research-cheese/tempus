@@ -119,6 +119,9 @@ convert("normal/test")
 convert("rain-0.5/test")
 convert("snow-0.5/test")
 
+from time import sleep
+sleep(10)
+
 def train(name):
     print("Training", name)
 
